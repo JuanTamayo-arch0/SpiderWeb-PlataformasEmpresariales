@@ -1,0 +1,53 @@
+{% extends 'baseWN.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Iniciar Sesión - Spider Web{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    {% block content %}
+
+    <div class="form-div2" id="log">
+        <div class="left-side">
+            <div class="container-text">
+                <h1>¡Bienvenido!</h1>
+                <h2>Regístrate para formar parte de la comunidad de fans de Spider-Man</h2>
+            </div>
+            <div class="container-btn">
+                <a href="{% url 'register' %}">
+                    <button id="wow2" class="btn">Registrarse</button>
+                </a>
+            </div>
+        </div>
+
+        <div class="right-side">
+            <div class="flex-display">
+                <img src="{% static 'img/logoboton.png' %}" alt="Logo Spider Web">
+                <h2>Iniciar Sesión</h2>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="info-box">
+                        <input type="text" name="username" placeholder="Usuario">
+                    </div>
+                    <div class="info-box">
+                        <input type="password" name="password" placeholder="Contraseña">
+                    </div>
+                    <div class="container-btn">
+                        <button type="submit" id="spinetta" class="btn">Enviar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
+</body>
+</html>

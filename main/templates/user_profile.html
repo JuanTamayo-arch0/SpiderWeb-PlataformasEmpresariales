@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Spider Web{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    {% block content %}
+
+
+
+    <div class="user-main">
+
+        <div class="btnfix" id="bt2">
+            <h1>👤</h1>
+        </div>
+
+
+        <div class="left">
+            <img src="{{ user.profile.avatar.url }}" alt="">
+            <div class="username">
+                <h1>{{ user.username }}</h1>
+            </div>
+            
+          
+            <a href="{% url 'login' %}">Cerrar sesión</a>
+        </div>
+      
+            
+      
+        <div class="right" id="user-p">
+            <h1>Editar perfil</h1>
+            <img id="image_preview" src="{{ user.profile.image.url }}" alt="Preview" width="150" style="margin-top:10px;"/>
+            <form method="post" enctype="multipart/form-data" class="form-user">
+                {% csrf_token %}
+                <label for="username">Nuevo nombre:</label>
+                <input type="text" name="username" placeholder="Ingresa nuevo nombre de usuario">
+        
+                <label for="avatar">Nueva foto de perfil:</label>
+                <input type="file" name="avatar" id="id_image" accept="image/*" onchange="previewImage(event)">
+        
+                <button type="submit">Guardar Cambios</button>
+            </form>
+            
+
+        </div>
+        
+    </div>
+
+    <script>
+        const button2 = document.getElementById('bt2');
+        button2.addEventListener('click', () => {     
+              
+            const elementss = document.getElementById('user-p');      
+            elementss.style.display = "flex";
+            
+            console.log("hiii")
+        });  
+    </script>
+
+    <script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            const output = document.getElementById('image_preview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+    </script>
+  
+
+    {% endblock %}
+</body>
+</html>

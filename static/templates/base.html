@@ -1,0 +1,60 @@
+{% load static %}
+{% load user_tags %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mi App{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <nav id="n1">
+        <div class="x">
+          <img src="{% static 'img/logocompleto.png' %}" alt="">
+        </div>
+        
+    
+        <div class="links">
+          <a data-i18n='home' href="{% url 'home' %}">Inicio</a>
+          <a data-i18n='gallery' href="{% url 'foro_inicio' %}">Foro</a>
+          <a data-i18n='videos' href="{% url 'perfil' %}">Perfil</a>
+          {% if user|has_group:"Admin_elementos" %}
+            <a data-i18n='videos' href="{% url 'admin_only' %}">Admin-Only</a>
+          {% endif %}
+        </div>
+        <span class="menu-toggle">☰</span>
+        
+      </nav>
+
+      {% block content %}
+    
+    
+
+      {% endblock %}
+
+    <script src="https://cdn.lgrckt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script>window.LogRocket && window.LogRocket.init('b7ed0e/spider-web');</script>
+
+    {% if user.is_authenticated %}
+      <script>
+        LogRocket.identify("{{ user.id }}", {
+          email: "{{ user.email|escapejs }}",
+          username: "{{ user.username|escapejs }}",
+          role: '{% if user.groups.all %}{{ user.groups.first.name }}{% else %}Usuario{% endif %}',
+        });
+      </script>
+
+      <script>
+        window.onerror = function(message, source, lineno, colno, error) {
+          LogRocket.captureException(error || new Error(message));
+        };
+      </script>
+
+    {% endif %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

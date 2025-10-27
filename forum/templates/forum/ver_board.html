@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load user_tags %}
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% block content %}
+
+    <div class="board-banner">
+        <img src="{% static 'img/banner-foro.jpeg' %}" alt="">
+        <h1>{{ board.nombre }}</h1>
+        <p>{{ board.descripcion }}</p>
+    </div>
+
+    <div class="post-main">
+
+        {% for post in posts %}
+        <div class="post-bubble">
+            <div class="avatar">
+            <img src="{{ post.autor.profile.avatar.url }}" alt="Avatar">
+            </div>
+            <div class="bubble-content">
+                <div class="post-imagen">
+                    {% if post.imagen %}
+                        <img src="{{ post.imagen.url }}" width="200">
+                    {% endif %}
+                </div>
+
+                <div class="post-content">
+                    <h3>{{ post.titulo }}</h3>
+                    <p>{{ post.contenido }}</p>
+                    <small>Publicado por {{ post.autor.username }} - {{ post.fecha_creacion }}</small>
+                    {% if user|has_group:"Admin_foro" %}
+                        <form action="{% url 'eliminar_post' post.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">🗑️</button>
+                        </form>
+                        <form action="{% url 'banear_usuario' post.autor.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">🚫</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        
+
+        {% if post.respuestas.count > 0 %}
+            <div class="respuesta-toggle" onclick="toggleRespuestas('{{ post.id }}')">
+                <span>+</span> {{ post.respuesta_set.count }} respuestas
+                </div>
+                <div class="respuestas" id="respuestas-{{ post.id }}" style="display: none;">
+                {% for respuesta in post.respuestas.all %}
+                    <div class="respuesta-bubble">
+                        <div class="avatar">
+                            <img src="{{ respuesta.autor.profile.avatar.url }}" alt="Avatar">
+                        </div>
+                        <div class="bubble-content" id="bubble2">
+                            <p>{{ respuesta.contenido }}</p>
+                            <small>Por {{ respuesta.autor.username }} - {{ respuesta.fecha_respuesta }}</small>
+                            {% if user|has_group:"Admin_foro" %}
+                                <form action="{% url 'eliminar_respuesta' respuesta.id %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit">🗑️</button>
+                                </form>
+                                <form action="{% url 'banear_usuario' respuesta.autor.id %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit">🚫</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <button onclick="toggleForm('{{ post.id }}' )" class="btn-resp">Responder</button>
+        <div id="form-{{ post.id }}" class="respuesta-form" style="display: none; ">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.contenido.errors }}
+                {{ form.contenido }}
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <button type="submit">Publicar respuesta</button>
+            </form>
+        </div>
+        {% endfor %}
+
+
+        <a href="{% url 'crear_post' board.slug %}" class="btn-crear-post">➕</a>
+        <a href="{% url 'foro_inicio' %}" class="btn-crear-post" id="return-btn">🔙</a>
+
+    </div>
+
+    
+
+    <script>
+        function toggleForm(postId) {
+          const formDiv = document.getElementById(`form-${postId}`);
+          formDiv.style.display = formDiv.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>    
+
+    <script>
+        function toggleRespuestas(postId) {
+          const respuestaDiv = document.getElementById(`respuestas-${postId}`);
+          if (respuestaDiv.style.display === 'none') {
+            respuestaDiv.style.display = 'block';
+          } else {
+            respuestaDiv.style.display = 'none';
+          }
+        }
+    </script>
+        
+
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load user_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  {% block content %}
+
+  <div class="foro-main">
+
+    <img src="{% static 'img/logocompleto.png' %}" alt="">
+
+    <div class="card-foro" >
+
+      <div class="title">
+        <h1>¿Qué es SpiderWeb?</h1>
+      </div>
+
+      <div class="content">
+        <p>SpiderWeb es un tablón de imágenes y discusión centrado en el universo de Spider-Man. Aquí puedes publicar sin necesidad de registrarte, compartir tus teorías, memes, fanarts, análisis y toda tu pasión por el trepamuros.</p>
+        <p>Desde los cómics clásicos hasta las nuevas películas del Spider-Verso, este es tu rincón para hablar de Peter Parker, Miles Morales, Spider-Gwen, Venom, los Seis Siniestros, y todo lo que forme parte de la telaraña multiversal.</p>
+      </div>
+
+    </div>
+
+    <div class="card-foro" id="card2">
+
+      <div class="title">
+        <h1>Foros</h1>
+      </div>
+
+      <div class="content">
+        <div class="board-column">
+          <h2>General</h2>
+          {% for board in boards_general %}
+            <div class="board-card">
+              <h2><a href="{% url 'ver_board' slug=board.slug %}">{{ board.nombre }}</a></h2>
+              <p>{{ board.descripcion }}</p>
+              <span class="categoria">{{ board.get_categoria_display }}</span>
+            </div>
+          {% empty %}
+            <p>No hay boards en esta categoría.</p>
+          {% endfor %}
+        </div>
+      
+        <div class="board-column">
+          <h2>Tecnología</h2>
+          {% for board in boards_tecnologia %}
+            <div class="board-card">
+              <h2><a href="{% url 'ver_board' slug=board.slug %}">{{ board.nombre }}</a></h2>
+              <p>{{ board.descripcion }}</p>
+              <span class="categoria">{{ board.get_categoria_display }}</span>
+            </div>
+          {% empty %}
+            <p>No hay boards en esta categoría.</p>
+          {% endfor %}
+        </div>
+      
+        <div class="board-column">
+          <h2>Spider-Man</h2>
+          {% for board in boards_spiderman %}
+            <div class="board-card">
+              <h2><a href="{% url 'ver_board' slug=board.slug %}">{{ board.nombre }}</a></h2>
+              <p>{{ board.descripcion }}</p>
+              <span class="categoria">{{ board.get_categoria_display }}</span>
+            </div>
+          {% empty %}
+            <p>No hay boards en esta categoría.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="card-foro2">
+      <div class="card-foro" id="card3">
+
+        <div class="title">
+          <h1>Imagenes recientes</h1>
+        </div>
+  
+        <div class="content">
+          {% for post in imagenes_recientes %}
+            {% if post.imagen %}
+              <div>
+                <img src="{{ post.imagen.url }}" alt="imagen" width="100">
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+      </div>
+     
+      <div class="card-foro" id="card4">
+
+        <div class="title">
+          <h1>Ultimos posts</h1>
+        </div>
+  
+        <div class="content">
+          <ul>
+              <ul>
+                {% for post in ultimos_posts %}
+                  <li>{{ post.titulo }} ({{ post.board.nombre }}) - {{ post.fecha_creacion }}</li>
+                {% endfor %}
+              </ul>
+          </ul>
+        </div>
+  
+      </div>
+    </div>
+
+  </div>
+
+  {% if user|has_group:"Admin_foro" %}
+    <a href="{% url 'crear_board' %}" class="btn-crear-post">Crear nuevo board</a>
+  {% endif %}
+  
+  {% endblock %}
+</body>
+</html>

@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Spider Web{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   
+</head>
+<body>
+
+  {% block content %}
+
+    <div class="mcon hidden" id="m">
+        <button id="darkModeToggle" class="floating-button v2"><img src="{% static 'img/dark.png' %}" alt=""></button>    
+            
+        <div class="mcon hidden" id="m">
+        
+        <header id="c1" >
+          <div class="carousel"></div>
+        </header>
+      
+        <main class="main">
+          
+      
+      
+          <div class="text" >
+            <div class="inside-box">
+              <p data-i18n='description'>
+                Spider-Man es uno de los superhéroes más icónicos de Marvel. Detrás de la máscara está Peter Parker, 
+                un joven que obtuvo increíbles habilidades tras ser mordido por una araña radiactiva. 
+                Con su agilidad, fuerza y sentido arácnido, protege a Nueva York mientras intenta llevar una vida normal. 
+                A lo largo de los años, ha enfrentado grandes desafíos, enemigos peligrosos y momentos inolvidables. 
+                Aquí encontrarás información sobre su historia, sus aliados y todo lo que hace especial a este héroe.
+              </p>
+            </div>
+          </div>
+      
+          <div class="movies" id="movies">
+            <div class="titulo">
+              <h1 data-i18n='gt'>Series y Peliculas!</h1>
+            </div>
+            
+            <div class="grid-tem">
+              <img class="item1" src="{% static 'img/galería1.png' %}" alt="">
+              <img class="item1" src="{% static 'img/galeria2.png' %}" alt="">
+              <img class="item1" src="{% static 'img/galeria3.png' %}" alt="">
+              <img class="item1" src="{% static 'img/galeria4.png' %}" alt="">
+              <img class="item1" src="{% static 'img/galeria4(1).png' %}" alt="">
+              <img class="item1" src="{% static 'img/galeria5.png' %}" alt="">
+              <img class="item1" src="{% static 'img/galeria6.png' %}" alt="">
+              <img class="item1" src="{% static 'img/galeria7.png' %}" alt="">
+              <img class="item1" src="{% static 'img/descarga (6).jpg' %}" alt="">
+              <img class="item1" src="{% static 'img/descarga (7).jpg' %}" alt="">
+              <img class="item1" src="{% static 'img/descarga (8).jpg' %}" alt="">
+              <img class="item1" src="{% static 'img/descarga (9).jpg' %}" alt="">
+            </div>
+          </div>
+
+          <div class="onlyauth">
+            <div class="ct">
+                <h1>Variantes de Spider-Man</h1>
+            </div>
+      
+            <form method="get" id="filterForm">
+              <input type="text" name="q" placeholder="Buscar por nombre" value="{{ nombre }}">
+              <input type="text" name="descripcion" placeholder="Buscar por descripción" value="{{ descripcion }}">
+            
+              <label for="orden">Ordenar:</label>
+              <select name="orden" id="orden" onchange="document.getElementById('filterForm').submit();">
+                <option value="asc" {% if orden == 'asc' %}selected{% endif %}>A-Z</option>
+                <option value="desc" {% if orden == 'desc' %}selected{% endif %}>Z-A</option>
+              </select>
+            
+              <label for="cantidad">Mostrar:</label>
+              <select name="cantidad" id="cantidad" onchange="document.getElementById('filterForm').submit();">
+                <option value="3" {% if cantidad == '3' %}selected{% endif %}>3</option>
+                <option value="6" {% if cantidad == '6' %}selected{% endif %}>6</option>
+                <option value="9" {% if cantidad == '9' %}selected{% endif %}>9</option>
+                <option value="12" {% if cantidad == '12' %}selected{% endif %}>12</option>
+              </select>
+            
+              <button type="submit">Aplicar Filtros</button>
+            
+              <!-- Botón de limpiar -->
+              <a href="{% url 'admin_only' %}" class="btn-clear">Limpiar Filtros</a>
+            </form>
+    
+            <div class="container" id="spiderman-container">
+                {% for v in page_obj %}
+                <div class="card">
+                    <img src="{{ v.imagen }}" alt="{{ v.nombre }}">
+                    <h3>{{ v.nombre }}</h3>
+                    <p>{{ v.descripcion }}</p>
+                </div>
+                {% empty %}
+                    <p>No se encontraron variantes de Spider-Man con ese nombre.</p>
+                {% endfor %}
+            </div>
+            <div class="pagination">
+                <span class="step-links">
+                  {% if page_obj.has_previous %}
+                    <a href="?{% if query %}q={{ query }}&{% endif %}page=1">&laquo; primero</a>
+                    <a href="?{% if query %}q={{ query }}&{% endif %}page={{ page_obj.previous_page_number }}">anterior</a>
+                  {% endif %}
+              
+                  <span class="current">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                  </span>
+              
+                  {% if page_obj.has_next %}
+                    <a href="?{% if query %}q={{ query }}&{% endif %}page={{ page_obj.next_page_number }}">siguiente</a>
+                    <a href="?{% if query %}q={{ query }}&{% endif %}page={{ page_obj.paginator.num_pages }}">última &raquo;</a>
+                  {% endif %}
+                </span>
+              </div>
+          </div>
+      
+          <div class="form-div" id="contacto">
+            <div class="left-side">
+              <img src="{% static 'img/formulario.png' %}"alt="">
+            </div>
+      
+            
+      
+            <div class="right-side">
+              <div class="flex-display">
+                <img src="{% static 'img/logocompleto.png' %}" alt="">
+                <h2 data-i18n='f1'>Llena el formulario para hacer parte del club de fans</h2>
+        
+                <div class="info-box">
+                  <h1 data-i18n='f2'>Nombre*:</h1>
+                  <input id="ib" type="text">
+                </div>
+                <div class="info-box">
+                  <h1 data-i18n='f3'>Correo*:</h1>
+                  <input id="ib2" type="text">
+                </div>
+                <div class="container-btn">
+                  <button data-i18n='f4' id="ib3" class="btn">Enviar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+          <div class="video-div" id="videos">
+            <iframe width="1280" height="720" src="https://www.youtube.com/embed/phHTwSN0JQY?si=p0DchgRWNNNq7VX5" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+          </div>
+      
+        </main>
+      
+        <footer id="f1">
+          <div class="container" id="c3">
+              <div class="col1">
+                <h1 data-i18n='a1'>Autores:</h1>
+                <p>Juan Jose Tamayo Ospina</p>
+                <p>Maria Lucia Cadavid Martinez</p>
+              </div>
+              <div class="col2">
+                <h1 data-i18n='a2'>Referencias</h1>
+                <a id="r" href="https://www.vidaextra.com/guias-y-trucos/todas-peliculas-spider-man-orden">Vida Extra</a>
+                <a id="r2" href="https://spider-man.fandom.com/es/wiki/Spider-Man_Wiki">Spider wiki</a>
+      
+              </div>
+              <div class="col3">
+                <h1 data-i18n='a3'>Contacto</h1>
+                <i class="fa-brands fa-instagram fa-2xl" ></i>
+                <i class="fa-brands fa-square-facebook fa-2xl"></i>
+                <i class="fa-brands fa-square-x-twitter fa-2xl"></i>
+                <i class="fa-brands fa-tiktok fa-2xl"></i>
+              </div>
+          </div>
+        </footer>
+      </div>
+      <script>
+        const b1 = "{% static 'img/banner1.png' %}";
+        const b2 = "{% static 'img/banner2.png' %}";
+        const b3 = "{% static 'img/banner3.png' %}";
+      </script>
+      <script src="{% static 'js/index.js' %}"></script>
+
+  {% endblock %}
+</body>
+</html>

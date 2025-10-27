@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mi App{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    {% block content %}    
+
+    {% endblock %}
+
+    <script src="https://cdn.lgrckt-in.com/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script>window.LogRocket && window.LogRocket.init('b7ed0e/spider-web');</script>
+
+    {% if user.is_authenticated %}
+      <script>
+        LogRocket.identify("{{ user.id }}", {
+          email: "{{ user.email|escapejs }}",
+          username: "{{ user.username|escapejs }}"
+        });
+      </script>
+    {% endif %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
